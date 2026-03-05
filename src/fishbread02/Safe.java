@@ -1,7 +1,9 @@
+package fishbread02;
+
 public class Safe {
     private int money = 0;
 
-    public void store(int amount) {
+    public synchronized void store(int amount) {
         this.money += amount;
     }
 

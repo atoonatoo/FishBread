@@ -1,3 +1,5 @@
+package fishbread01;
+
 public class FishBread {
     private final FishBreadType type;
 

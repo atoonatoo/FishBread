@@ -1,3 +1,5 @@
+package fishbread02;
+
 public enum FishBreadType {
     RED_BEAN("팥", 1000),
     CREAM("크림", 1500),
