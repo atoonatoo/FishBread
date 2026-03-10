@@ -2,7 +2,9 @@ package fishbread02;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConcurrencyMain {
     public static void main(String[] args) {
@@ -14,24 +16,31 @@ public class ConcurrencyMain {
         int initialMoney = 10000;
 
         List<Customer> customers = new ArrayList<>();
+        List<Thread> threads = new ArrayList<>();
 
         for (int i = 0; i < numberOfCustomers; i++) {
-            customers.add(new Customer(initialMoney, seller));
+            Customer customer = new Customer("고객 : " + (i + 1), initialMoney);
+            customers.add(customer);
+
+            BuyFishBreadTask task = new BuyFishBreadTask(customer, seller);
+
+            Thread thread = new Thread(task);
+            threads.add(thread);
         }
 
-        for (Customer c : customers) {
-            c.start();
+        for (Thread t : threads) {
+            t.start();
         }
 
-        for (Customer c : customers) {
+        for (Thread t : threads) {
             try {
-                c.join();
+                t.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
 
-        System.out.println("\n[ 최종 판매 보고서 ]");
+        System.out.println("\n[ 판매 보고서 ]");
 
         int totalSoldQuantity = 0;
         int totalCustomerSpent = 0;
@@ -57,8 +66,15 @@ public class ConcurrencyMain {
         System.out.println("   - 크림 붕어빵 : " + cream + "개");
         System.out.println("   - 매운 붕어빵 : " + hot + "개");
         System.out.println("2. 총 판매 개수 : " + totalSoldQuantity + "개");
-        System.out.println("3. 고객 지출 총액: " + totalCustomerSpent + "원");
-        System.out.println("4. 장수 금고 잔액: " + sellerRevenue + "원");
+
+        System.out.println("3. [ 금고 장부 내역 (고객별 지불 금액) ]");
+        Map<String, AtomicInteger> ledger = seller.getLedger();
+        for (Map.Entry<String, AtomicInteger> entry : ledger.entrySet()) {
+            System.out.println("   - " + entry.getKey() + " : " + entry.getValue().get() + "원");
+        }
+
+        System.out.println("4. 고객 지출 총액: " + totalCustomerSpent + "원");
+        System.out.println("5. 장수 금고 총 잔액: " + sellerRevenue + "원");
         System.out.println("----------------------------------------------");
 
         if (totalCustomerSpent == sellerRevenue) {
