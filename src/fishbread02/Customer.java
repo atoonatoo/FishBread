@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Customer {
-    private final String name; // 식별용 이름 추가
+    private final String name;
     private int wallet;
     private final List<FishBread> fishBreads = new ArrayList<>();
 
