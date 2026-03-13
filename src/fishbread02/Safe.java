@@ -1,21 +1,23 @@
 package fishbread02;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Safe {
-    private final Map<String, AtomicInteger> ledger = new ConcurrentHashMap<>();
+    private final Map<Customer, Integer> ledger = new ConcurrentHashMap<>();
 
-    public void store(String customerName, int amount) {
-        ledger.computeIfAbsent(customerName, k -> new AtomicInteger(0)).addAndGet(amount);
+    public void store(Customer customer, int amount) {
+        ledger.merge(customer, amount, Integer::sum);
     }
 
     public int getBalance() {
-        return ledger.values().stream().mapToInt(AtomicInteger::get).sum();
+        return ledger.values().stream()
+                .mapToInt(Integer::intValue)
+                .sum();
     }
 
-    public Map<String, AtomicInteger> getLedger() {
-        return ledger;
+    public Map<Customer, Integer> getLedger() {
+        return Collections.unmodifiableMap(ledger);
     }
 }

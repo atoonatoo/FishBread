@@ -3,7 +3,6 @@ package fishbread02;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class FishBreadSeller {
     private final Safe safe = new Safe();
@@ -14,7 +13,7 @@ public class FishBreadSeller {
             fishBreads.add(new FishBread(type));
         }
 
-        safe.store(customer.getName(), totalPayment);
+        safe.store(customer, totalPayment);
         return fishBreads;
     }
 
@@ -22,7 +21,7 @@ public class FishBreadSeller {
         return safe.getBalance();
     }
 
-    public Map<String, AtomicInteger> getLedger() {
+    public Map<Customer, Integer> getLedger() {
         return safe.getLedger();
     }
 }

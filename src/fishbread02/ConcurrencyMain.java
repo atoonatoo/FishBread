@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConcurrencyMain {
     public static void main(String[] args) {
@@ -19,7 +18,7 @@ public class ConcurrencyMain {
         List<Thread> threads = new ArrayList<>();
 
         for (int i = 0; i < numberOfCustomers; i++) {
-            Customer customer = new Customer("고객 : " + (i + 1), initialMoney);
+            Customer customer = new Customer("고객 : " + (i + 1) + "번", initialMoney);
             customers.add(customer);
 
             BuyFishBreadTask task = new BuyFishBreadTask(customer, seller);
@@ -68,9 +67,9 @@ public class ConcurrencyMain {
         System.out.println("2. 총 판매 개수 : " + totalSoldQuantity + "개");
 
         System.out.println("3. [ 금고 장부 내역 (고객별 지불 금액) ]");
-        Map<String, AtomicInteger> ledger = seller.getLedger();
-        for (Map.Entry<String, AtomicInteger> entry : ledger.entrySet()) {
-            System.out.println("   - " + entry.getKey() + " : " + entry.getValue().get() + "원");
+        Map<Customer, Integer> ledger = seller.getLedger();
+        for (Map.Entry<Customer, Integer> entry : ledger.entrySet()) {
+            System.out.println("   - " + entry.getKey().getName() + " : " + entry.getValue() + "원");
         }
 
         System.out.println("4. 고객 지출 총액: " + totalCustomerSpent + "원");
